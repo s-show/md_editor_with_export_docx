@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown Editor</title>
+</head>
+<body>
+  <header id="topbar">
+    <span id="app-title">Markdown Editor</span>
+    <span id="doc-title"></span>
+    <div class="spacer"></div>
+    <button id="btn-new" class="btn">＋ 新規文書</button>
+    <button id="btn-commit" class="btn">コミット</button>
+    <details id="export-menu" class="menu">
+      <summary class="btn">エクスポート ▾</summary>
+      <div class="menu-items">
+        <button id="btn-export-md">Markdown (.md) ファイル</button>
+        <button id="btn-export-docx">Word (.docx) ファイル</button>
+        <button id="btn-export-json">バックアップ (JSON・コミット履歴含む)</button>
+      </div>
+    </details>
+    <button id="btn-import" class="btn">インポート</button>
+    <button id="btn-toggle-left" class="btn toggle" title="文書管理サイドバー 表示切替 (Alt+1)">☰ 文書</button>
+    <button id="btn-toggle-right" class="btn toggle" title="アウトライン表示切替 (Alt+2)">≡ アウトライン</button>
+  </header>
+
+  <main id="layout">
+    <aside id="sidebar-left">
+      <div id="doc-list-header">
+        <h2>文書</h2>
+        <button id="btn-delete-doc" class="btn small">削除</button>
+      </div>
+      <ul id="doc-list"></ul>
+      <section id="commit-panel">
+        <div id="commit-header">
+          <h2>コミット履歴</h2>
+          <button id="btn-diff-selected" class="btn small" disabled>選択 2 件の差分</button>
+        </div>
+        <ul id="commit-list"></ul>
+      </section>
+    </aside>
+
+    <section id="center">
+      <div id="center-toolbar">
+        <button id="btn-center-mode" class="btn small">表示: 分割</button>
+        <span id="status" class="status"></span>
+      </div>
+      <div id="center-body">
+        <div id="editor-pane">
+          <textarea id="editor" spellcheck="false"
+            placeholder="# 見出しを 1 つ入れると文書名になります&#10;&#10;GitHub Flavored Markdown で記述できます。"></textarea>
+        </div>
+        <div id="splitter"></div>
+        <div id="preview-pane">
+          <div id="preview" class="markdown-body"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside id="sidebar-right">
+      <h2>アウトライン</h2>
+      <nav id="outline"></nav>
+    </aside>
+  </main>
+
+  <input type="file" id="file-input" multiple hidden
+         accept=".md,.markdown,.txt,.json" />
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
