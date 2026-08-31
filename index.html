@@ -44,7 +44,11 @@
 
     <section id="center">
       <div id="center-toolbar">
-        <button id="btn-center-mode" class="btn small"><span class="md-icon sm">splitscreen</span><span id="center-mode-label">表示: 分割</span></button>
+        <div id="center-mode-seg" role="group" aria-label="表示モード">
+          <button id="btn-mode-editor" class="seg" aria-pressed="false"><span class="md-icon sm seg-check">check</span><span>編集</span></button>
+          <button id="btn-mode-split" class="seg" aria-pressed="false"><span class="md-icon sm seg-check">check</span><span>分割</span></button>
+          <button id="btn-mode-preview" class="seg" aria-pressed="false"><span class="md-icon sm seg-check">check</span><span>プレビュー</span></button>
+        </div>
         <span id="status" class="status"></span>
       </div>
       <div id="center-body">

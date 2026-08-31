@@ -56,9 +56,11 @@ const fileInputEl = document.getElementById(
 const exportMenuEl = document.getElementById(
   "export-menu",
 ) as HTMLDetailsElement;
-const centerModeBtn = document.getElementById(
-  "btn-center-mode",
-) as HTMLButtonElement;
+const centerModeBtns: Record<CenterMode, HTMLButtonElement> = {
+  editor: document.getElementById("btn-mode-editor") as HTMLButtonElement,
+  split: document.getElementById("btn-mode-split") as HTMLButtonElement,
+  preview: document.getElementById("btn-mode-preview") as HTMLButtonElement,
+};
 const btnToggleLeft = document.getElementById(
   "btn-toggle-left",
 ) as HTMLButtonElement;
@@ -165,21 +167,24 @@ function renderDocList(): void {
   if (sorted.length === 0) {
     const li = document.createElement("li");
     li.className = "empty-hint";
-    li.textContent = "文書がありません。「＋ 新規文書」で作成してください";
+    li.textContent = "文書がありません。「新規文書」ボタンで作成してください";
     docListEl.appendChild(li);
     return;
   }
   for (const d of sorted) {
     const li = document.createElement("li");
     li.className = "doc-item" + (d.id === currentId ? " active" : "");
+    const main = document.createElement("div");
+    main.className = "doc-main";
     const name = document.createElement("span");
     name.className = "doc-name";
     name.textContent = docDisplayName(d);
     name.title = docDisplayName(d);
     const time = document.createElement("span");
     time.className = "doc-time";
-    time.textContent = formatTime(d.updatedAt);
-    li.append(name, time);
+    time.textContent = `最終更新 ${formatTime(d.updatedAt)}`;
+    main.append(name, time);
+    li.append(main);
     li.addEventListener("click", () =>
       void selectDocument(d.id).catch((e) => {
         console.error("select document failed", e);
@@ -294,6 +299,8 @@ function renderCommitPanel(): void {
     const cb = document.createElement("input");
     cb.type = "checkbox";
     cb.title = "比較用に選択";
+    const main = document.createElement("div");
+    main.className = "commit-main";
     const label = document.createElement("span");
     label.className = "commit-msg";
     label.textContent = c.message || "(メッセージなし)";
@@ -301,6 +308,7 @@ function renderCommitPanel(): void {
     const time = document.createElement("span");
     time.className = "commit-time";
     time.textContent = formatDateTime(c.timestamp);
+    main.append(label, time);
     const btn = document.createElement("button");
     btn.className = "btn small icon-btn";
     btn.innerHTML = '<span class="md-icon sm">compare</span>';
@@ -308,7 +316,7 @@ function renderCommitPanel(): void {
     btn.title = "直前のコミットとの差分を表示";
     btn.addEventListener("click", () => showDiffModal(sorted[idx - 1], c));
     cb.addEventListener("change", updateDiffSelectedBtn);
-    li.append(cb, label, time, btn);
+    li.append(cb, main, btn);
     commitListEl.appendChild(li);
   });
   updateDiffSelectedBtn();
@@ -490,10 +498,12 @@ function setCenterMode(mode: CenterMode): void {
   centerMode = mode;
   centerBodyEl.classList.toggle("mode-editor", mode === "editor");
   centerBodyEl.classList.toggle("mode-preview", mode === "preview");
-  const label = document.getElementById("center-mode-label");
-  if (label) {
-    label.textContent =
-      mode === "split" ? "表示: 分割" : mode === "editor" ? "表示: 入力のみ" : "表示: プレビューのみ";
+  for (const [m, b] of Object.entries(centerModeBtns) as [
+    CenterMode,
+    HTMLButtonElement,
+  ][]) {
+    b.setAttribute("aria-pressed", String(m === mode));
+    b.classList.toggle("active", m === mode);
   }
   localStorage.setItem("ui:centerMode", mode);
 }
@@ -562,9 +572,9 @@ async function init(): Promise<void> {
   document.getElementById("btn-commit")!.addEventListener("click", () => void onCommitClick());
   btnToggleLeft.addEventListener("click", toggleLeft);
   btnToggleRight.addEventListener("click", toggleRight);
-  centerModeBtn.addEventListener("click", () =>
-    setCenterMode(centerMode === "split" ? "editor" : centerMode === "editor" ? "preview" : "split"),
-  );
+  for (const m of Object.keys(centerModeBtns) as CenterMode[]) {
+    centerModeBtns[m].addEventListener("click", () => setCenterMode(m));
+  }
 
   document.getElementById("btn-export-md")!.addEventListener("click", () => void onExportMd());
   const btnExportDocx = document.getElementById("btn-export-docx")!;

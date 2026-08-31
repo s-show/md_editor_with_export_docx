@@ -22,7 +22,7 @@ export interface ModalAction {
 export function attachRipple(): void {
   document.addEventListener("pointerdown", (e) => {
     const target = (e.target as HTMLElement).closest<HTMLElement>(
-      ".btn, .menu-items button, .doc-item, .outline-item",
+      ".btn, .seg, .menu-items button, .doc-item, .outline-item",
     );
     if (!target || (target as HTMLButtonElement).disabled) return;
     const rect = target.getBoundingClientRect();
