@@ -541,6 +541,16 @@ async function init(): Promise<void> {
   initSplitter();
   attachRipple();
 
+  // ドロップダウン (details) をメニュー外クリックで閉じる
+  const exportMenu = document.getElementById(
+    "export-menu",
+  ) as HTMLDetailsElement;
+  document.addEventListener("click", (e) => {
+    if (exportMenu.open && !exportMenu.contains(e.target as Node)) {
+      exportMenu.open = false;
+    }
+  });
+
   editorEl.addEventListener("input", onInput);
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") void flushSave();
