@@ -8,12 +8,20 @@ export function requestCommitMessage(): Promise<string | null> {
   return new Promise((resolve) => {
     const wrap = document.createElement("div");
     const p = document.createElement("p");
-    p.textContent = "現在の本文をコミットします。メッセージを入力してください (空欄可)。";
-    const ta = document.createElement("textarea");
-    ta.rows = 3;
-    ta.className = "commit-message-input";
-    ta.placeholder = "例: 導入部を追加";
-    wrap.append(p, ta);
+    p.textContent = "現在の本文をスナップショットとしてコミットします。";
+    // MD3 filled text field (単一行)
+    const field = document.createElement("div");
+    field.className = "md-textfield";
+    const ta = document.createElement("input");
+    ta.type = "text";
+    ta.id = "commit-msg-input";
+    ta.placeholder = " ";
+    ta.setAttribute("maxlength", "200");
+    const label = document.createElement("label");
+    label.htmlFor = "commit-msg-input";
+    label.textContent = "コミットメッセージ (空欄可)";
+    field.append(ta, label);
+    wrap.append(p, field);
 
     openModal("コミット", wrap, [
       {
@@ -75,7 +83,10 @@ export function showDiffModal(a: CommitRecord, b: CommitRecord): void {
   } else {
     wrap.appendChild(renderDiffPatch(patch));
   }
-  openModal("コミット間の差分 (Unified Diff)", wrap, [
-    { label: "閉じる", primary: true, onClick: closeModal },
-  ]);
+  openModal(
+    "コミット間の差分 (Unified Diff)",
+    wrap,
+    [{ label: "閉じる", primary: true, onClick: closeModal }],
+    true,
+  );
 }

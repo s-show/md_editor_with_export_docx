@@ -11,7 +11,10 @@ export function downloadBlob(blob: Blob, filename: string): void {
 
 export interface ModalAction {
   label: string;
+  /** primary 色のテキストボタン (MD3 ダイアログ action は全てテキストボタン) */
   primary?: boolean;
+  /** 破壊的 action を示す error 色テキストボタン */
+  danger?: boolean;
   onClick: () => void;
 }
 
@@ -43,12 +46,13 @@ export function openModal(
   title: string,
   content: HTMLElement,
   actions: ModalAction[],
+  wide = false,
 ): void {
   closeModal();
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
   const modal = document.createElement("div");
-  modal.className = "modal";
+  modal.className = "modal" + (wide ? " wide" : "");
 
   const h = document.createElement("h2");
   h.textContent = title;
@@ -62,7 +66,11 @@ export function openModal(
   for (const act of actions) {
     const btn = document.createElement("button");
     btn.textContent = act.label;
-    if (act.primary) btn.className = "btn-primary";
+    btn.className = act.danger
+      ? "btn btn-dialog-danger"
+      : act.primary
+        ? "btn btn-dialog-primary"
+        : "btn";
     btn.addEventListener("click", () => act.onClick());
     foot.appendChild(btn);
   }
@@ -84,6 +92,7 @@ export function closeModal(): void {
 export function confirmDialog(
   message: string,
   okLabel = "実行",
+  danger = false,
 ): Promise<boolean> {
   return new Promise((resolve) => {
     const p = document.createElement("p");
@@ -98,7 +107,7 @@ export function confirmDialog(
       },
       {
         label: okLabel,
-        primary: true,
+        danger,
         onClick: () => {
           closeModal();
           resolve(true);
@@ -106,4 +115,52 @@ export function confirmDialog(
       },
     ]);
   });
+}
+
+/* ---- snackbar (MD3): 一時的な結果通知 ---- */
+let snackbarEl: HTMLDivElement | null = null;
+let snackbarTimer: number | null = null;
+
+export function showSnackbar(
+  message: string,
+  actionLabel?: string,
+  onAction?: () => void,
+): void {
+  if (snackbarEl && snackbarTimer !== null) {
+    clearTimeout(snackbarTimer);
+    snackbarEl.remove();
+  }
+  const el = document.createElement("div");
+  el.className = "md-snackbar";
+  const span = document.createElement("span");
+  span.className = "snackbar-msg";
+  span.textContent = message;
+  span.title = message;
+  el.appendChild(span);
+
+  function dismiss(): void {
+    if (snackbarTimer !== null) clearTimeout(snackbarTimer);
+    el.classList.remove("visible");
+    window.setTimeout(() => {
+      el.remove();
+      if (snackbarEl === el) snackbarEl = null;
+    }, 250);
+  }
+
+  if (actionLabel) {
+    const btn = document.createElement("button");
+    btn.className = "snackbar-action";
+    btn.textContent = actionLabel;
+    btn.addEventListener("click", () => {
+      const cb = onAction;
+      dismiss();
+      cb?.();
+    });
+    el.appendChild(btn);
+  }
+
+  document.body.appendChild(el);
+  snackbarEl = el;
+  requestAnimationFrame(() => el.classList.add("visible"));
+  snackbarTimer = window.setTimeout(dismiss, actionLabel ? 5000 : 4000);
 }

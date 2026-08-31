@@ -22,7 +22,13 @@ import {
   formatTime,
   renderMarkdown,
 } from "./markdown";
-import { attachRipple, closeModal, confirmDialog, openModal } from "./ui";
+import {
+  attachRipple,
+  closeModal,
+  confirmDialog,
+  openModal,
+  showSnackbar,
+} from "./ui";
 import {
   exportAsDocx,
   exportAsMarkdown,
@@ -247,6 +253,7 @@ async function deleteCurrentDocument(): Promise<void> {
   const ok = await confirmDialog(
     `文書「${docDisplayName(doc)}」を削除します。コミット履歴も削除されます。よろしいですか？`,
     "削除",
+    true,
   );
   if (!ok) return;
   const id = doc.id;
@@ -355,7 +362,7 @@ async function onCommitClick(): Promise<void> {
   try {
     await putCommit(commit);
     await loadCommitPanel();
-    setStatus(`コミット済み ${formatTime(commit.timestamp)}`);
+    showSnackbar(`コミット済み ${formatTime(commit.timestamp)}`);
   } catch (e) {
     console.error("commit failed", e);
     alert(`コミットに失敗しました: ${errMsg(e)}`);
@@ -371,6 +378,7 @@ async function onExportMd(): Promise<void> {
   if (!fresh) return;
   try {
     exportAsMarkdown(fresh, docDisplayName(fresh));
+    showSnackbar(".md ファイルをエクスポートしました");
   } catch (e) {
     console.error("export md failed", e);
     alert(`.md エクスポートに失敗しました: ${errMsg(e)}`);
@@ -391,6 +399,7 @@ async function onExportDocx(): Promise<void> {
     const fresh = currentDoc();
     if (!fresh) return;
     await exportAsDocx(fresh, docDisplayName(fresh));
+    showSnackbar(".docx ファイルをエクスポートしました");
   } catch (e) {
     console.error("docx export failed", e);
     alert(`.docx 生成に失敗しました: ${e instanceof Error ? e.message : String(e)}\n詳細はコンソール (F12) を確認してください`);
@@ -405,6 +414,7 @@ async function onExportBackupJson(): Promise<void> {
     const allCommits: CommitRecord[] = [];
     for (const d of docs) allCommits.push(...(await getCommits(d.id)));
     exportBackup(docs, allCommits, `md-editor-backup-${formatDateTime(Date.now()).replace(/[-: ]/g, "")}.json`);
+    showSnackbar("バックアップ (JSON) をエクスポートしました");
   } catch (e) {
     console.error("export backup failed", e);
     alert(`バックアップエクスポートに失敗しました: ${errMsg(e)}`);
