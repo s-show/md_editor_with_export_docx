@@ -391,7 +391,8 @@ async function onExportDocx(): Promise<void> {
   const btn = document.getElementById(
     "btn-export-docx",
   ) as HTMLButtonElement;
-  const original = btn.innerHTML;
+  // クリック時点で進行中のリップル span を除いてクリーンなマークアップを保持
+  const original = btn.innerHTML.replace(/<span class="md-ripple"[^>]*><\/span>/g, "");
   btn.disabled = true;
   btn.textContent = "生成中…";
   try {
@@ -405,7 +406,7 @@ async function onExportDocx(): Promise<void> {
     alert(`.docx 生成に失敗しました: ${e instanceof Error ? e.message : String(e)}\n詳細はコンソール (F12) を確認してください`);
   } finally {
     btn.disabled = false;
-    btn.textContent = original;
+    btn.innerHTML = original;
   }
 }
 
