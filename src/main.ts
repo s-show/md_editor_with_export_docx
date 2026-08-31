@@ -177,6 +177,12 @@ function renderDocList(): void {
     docListEl.appendChild(li);
     return;
   }
+  const selectDoc = (d: DocRecord) =>
+    void selectDocument(d.id).catch((e) => {
+      console.error("select document failed", e);
+      alert(`文書の開きに失敗しました: ${errMsg(e)}`);
+    });
+
   for (const d of sorted) {
     const li = document.createElement("li");
     li.className = "doc-item" + (d.id === currentId ? " active" : "");
@@ -191,12 +197,16 @@ function renderDocList(): void {
     time.textContent = `最終更新 ${formatTime(d.updatedAt)}`;
     main.append(name, time);
     li.append(main);
-    li.addEventListener("click", () =>
-      void selectDocument(d.id).catch((e) => {
-        console.error("select document failed", e);
-        alert(`文書の開きに失敗しました: ${errMsg(e)}`);
-      }),
-    );
+    // キーボード操作 (Tab で移動、Enter/Space で選択)
+    li.tabIndex = 0;
+    li.setAttribute("role", "button");
+    li.addEventListener("click", () => selectDoc(d));
+    li.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        selectDoc(d);
+      }
+    });
     docListEl.appendChild(li);
   }
 }
@@ -614,7 +624,10 @@ async function init(): Promise<void> {
 
   // キーボードショートカット
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
+    if (e.key === "Escape") {
+      closeModal();
+      if (exportMenuEl.open) exportMenuEl.open = false;
+    }
     if (e.altKey && e.code === "Digit1") {
       e.preventDefault();
       toggleLeft();

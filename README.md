@@ -13,7 +13,8 @@
 - **複数文書** — 識別名は先頭 H1 > (インポート時のファイル名) > 初回自動保存のタイムスタンプ
 - **エクスポート** — `.md` / `.docx` / バックアップ `.json` (文書 + コミット履歴)
 - **インポート** — `.md` / `.markdown` / `.txt` (UTF-8 → SHIFT-JIS フォールバック、上限 10MB、ドラッグ&ドロップ可) / バックアップ `.json`
-- **レイアウト** — 左: 文書管理 + コミット履歴 / 中央: 入力・プレビュー (分割位置ドラッグ可、入力のみ・プレビューのみの切替) / 右: アウトライン。左右サイドバーは独立して表示切替 (Alt+1 / Alt+2、状態は永続化)
+- **レイアウト** — 左: 文書管理 + コミット履歴 / 中央: 入力・プレビュー (分割位置ドラッグ可、編集/分割/プレビューのセグメント切替) / 右: アウトライン。左右サイドバーは独立して表示切替 (Alt+1 / Alt+2、状態は永続化、900px 未満ではオーバーレイ化)
+- **UI** — Material Design 3 (MD3) ベース: color roles / shape / tonal elevation / type scale を CSS トークン化、`prefers-color-scheme` で自動ダークモード、Material Symbols Outlined (woff2 を `public/fonts/` に自己ホスト)、リップル + state layer、Snackbar (一時的な結果通知)、MD3 ダイアログ (破壊的 action は error 色)。依存ライブラリなしの自前 CSS 実装
 
 ## 開発
 
@@ -27,6 +28,8 @@ npm run preview    # 生産ビルドの配信
 注意: この環境では `NODE_ENV=production` が既定で効いており devDependencies がスキップされるため、`npm install` 時は `NODE_ENV=development` を付けます。
 
 ## 設計メモ
+
+- **非セキュアコンテキスト対応**: `http://<LAN IP>` 開時は `crypto.randomUUID` が存在しない。`newId()` (起動時にネイティブの有無を判定し自己再帰しない) + 起動時一回の `crypto.randomUUID` グローバルポリフィルで、依存パッケージ (例: `@m2d/list`) の直接呼び出しもカバー。
 
 - **セキュリティ**: プレビューに生 HTML を流さないため `markdown-it` を `html: false` 固定。インポートするテキストやコミット本文から XSS が成立しないことをこれだけで保証する。`html: true` への切替オプションは作らないこと。
 - **保存**: 文書 (`documents`) とコミット (`commits`) を IndexedDB の 2 ストアに格納。コミットは全文スナップショット方式。

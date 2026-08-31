@@ -76,13 +76,6 @@
   --diff-add-bg: #e6ffec;
   --diff-del-bg: #ffebe9;
   --diff-hunk-bg: #ddf4ff;
-
-  /* 従来変数のマッピング (フェーズ 2-4 で各コンポーネントが MD3 変数に置換される)
-   * 削除候補: リファクタ完了後 */
-  --border: var(--md-outline-variant);
-  --accent: var(--md-primary);
-  --bg-soft: var(--md-surface-container-low);
-  --text-dim: var(--md-on-surface-variant);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -161,7 +154,7 @@ body {
   align-items: center;
   padding: 0 8px;
   min-height: 56px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--md-outline-variant);
   background: var(--md-surface-container);
   flex-wrap: wrap;
 }
@@ -174,7 +167,7 @@ body {
 
 #doc-title {
   font-size: 12px;
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
   margin-left: 12px;
   max-width: 30vw;
   overflow: hidden;
@@ -423,13 +416,13 @@ body.hide-left.hide-right #layout {
 }
 
 #sidebar-left {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--md-outline-variant);
   display: flex;
   flex-direction: column;
 }
 
 #sidebar-right {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--md-outline-variant);
 }
 
 body.hide-left #sidebar-left,
@@ -465,7 +458,7 @@ body.hide-right #sidebar-right {
 }
 
 #commit-panel {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--md-outline-variant);
   margin-top: 10px;
   padding-bottom: 10px;
 }
@@ -479,7 +472,7 @@ body.hide-right #sidebar-right {
 
 .empty-hint {
   padding: 8px 12px;
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
   font-size: 12px;
 }
 
@@ -490,6 +483,7 @@ body.hide-right #sidebar-right {
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 20px;
+  outline: none;
 }
 
 .doc-main {
@@ -507,7 +501,7 @@ body.hide-right #sidebar-right {
 }
 
 .doc-time {
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
   font-size: 12px;
 }
 
@@ -561,7 +555,7 @@ body.hide-right #sidebar-right {
 }
 
 .commit-time {
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
   font-size: 11.5px;
 }
 
@@ -614,7 +608,7 @@ body.hide-right #sidebar-right {
   align-items: center;
   gap: 12px;
   padding: 6px 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--md-outline-variant);
   background: var(--md-background);
 }
 
@@ -675,7 +669,7 @@ body.hide-right #sidebar-right {
 
 .status {
   font-size: 12px;
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
   margin-left: auto;
 }
 
@@ -695,12 +689,12 @@ body.hide-right #sidebar-right {
 #splitter {
   width: 5px;
   cursor: col-resize;
-  background: var(--border);
+  background: var(--md-outline-variant);
   flex-shrink: 0;
 }
 
 #splitter:hover {
-  background: var(--accent);
+  background: var(--md-primary);
 }
 
 #preview-pane {
@@ -787,14 +781,14 @@ body.hide-right #sidebar-right {
 }
 
 .markdown-body a {
-  color: var(--accent);
+  color: var(--md-primary);
 }
 
 .markdown-body blockquote {
   border-left: 3px solid var(--preview-line);
   margin: 0;
   padding-left: 12px;
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
 }
 
 .markdown-body img {
@@ -823,7 +817,7 @@ body.hide-right #sidebar-right {
   padding-top: 0.5em;
   border-top: 1px solid var(--preview-line);
   font-size: 0.9em;
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
 }
 
 .markdown-body .footnotes ol {
@@ -977,6 +971,44 @@ body.hide-right #sidebar-right {
   background: color-mix(in srgb, var(--md-inverse-primary) 12%, transparent);
 }
 
+/* ---- focus / keyboard ---- */
+.menu-items button:focus-visible,
+.outline-item:focus-visible,
+.snackbar-action:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+.doc-item:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: -2px;
+}
+
+/* ---- 狭幅画面: サイドバーはオーバーレイ化 ---- */
+@media (max-width: 900px) {
+  #layout {
+    grid-template-columns: 1fr;
+  }
+
+  #sidebar-left,
+  #sidebar-right {
+    position: fixed;
+    top: 57px;
+    bottom: 0;
+    width: min(320px, 85vw);
+    z-index: 40;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  #sidebar-left {
+    left: 0;
+  }
+
+  #sidebar-right {
+    right: 0;
+  }
+}
+
 /* ---- diff ---- */
 .diff-view {
   font-family: ui-monospace, "SF Mono", Consolas, monospace;
@@ -984,7 +1016,7 @@ body.hide-right #sidebar-right {
   line-height: 1.5;
   margin: 0;
   padding: 8px;
-  background: var(--bg-soft);
+  background: var(--md-surface-container-low);
   border-radius: 6px;
   overflow-x: auto;
 }
@@ -1003,10 +1035,10 @@ body.hide-right #sidebar-right {
 }
 
 .diff-hunk {
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
   background: var(--diff-hunk-bg);
 }
 
 .diff-meta {
-  color: var(--text-dim);
+  color: var(--md-on-surface-variant);
 }
