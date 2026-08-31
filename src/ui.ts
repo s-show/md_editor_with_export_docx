@@ -15,6 +15,28 @@ export interface ModalAction {
   onClick: () => void;
 }
 
+/**
+ * MD3 リップル: 対象要素の pointerdown 位置から広がる半透明サークル。
+ * イベント委譲で 1 回だけ登録する。対象: .btn / メニュー項目 / リスト項目。
+ */
+export function attachRipple(): void {
+  document.addEventListener("pointerdown", (e) => {
+    const target = (e.target as HTMLElement).closest<HTMLElement>(
+      ".btn, .menu-items button, .doc-item, .outline-item",
+    );
+    if (!target || (target as HTMLButtonElement).disabled) return;
+    const rect = target.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2;
+    const span = document.createElement("span");
+    span.className = "md-ripple";
+    span.style.width = span.style.height = `${size}px`;
+    span.style.left = `${e.clientX - rect.left - size / 2}px`;
+    span.style.top = `${e.clientY - rect.top - size / 2}px`;
+    target.appendChild(span);
+    span.addEventListener("animationend", () => span.remove(), { once: true });
+  });
+}
+
 let overlayEl: HTMLDivElement | null = null;
 
 export function openModal(

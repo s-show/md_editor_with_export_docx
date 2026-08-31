@@ -11,32 +11,32 @@
     <span id="app-title">Markdown Editor</span>
     <span id="doc-title"></span>
     <div class="spacer"></div>
-    <button id="btn-new" class="btn">＋ 新規文書</button>
-    <button id="btn-commit" class="btn">コミット</button>
+    <button id="btn-new" class="btn btn-tonal"><span class="md-icon">note_add</span>新規文書</button>
+    <button id="btn-commit" class="btn btn-filled"><span class="md-icon">commit</span>コミット</button>
     <details id="export-menu" class="menu">
-      <summary class="btn">エクスポート ▾</summary>
+      <summary class="btn"><span class="md-icon">file_download</span>エクスポート<span class="md-icon caret">arrow_drop_down</span></summary>
       <div class="menu-items">
-        <button id="btn-export-md">Markdown (.md) ファイル</button>
-        <button id="btn-export-docx">Word (.docx) ファイル</button>
-        <button id="btn-export-json">バックアップ (JSON・コミット履歴含む)</button>
+        <button id="btn-export-md"><span class="md-icon">description</span>Markdown (.md) ファイル</button>
+        <button id="btn-export-docx"><span class="md-icon">article</span>Word (.docx) ファイル</button>
+        <button id="btn-export-json"><span class="md-icon">archive</span>バックアップ (JSON・コミット履歴含む)</button>
       </div>
     </details>
-    <button id="btn-import" class="btn">インポート</button>
-    <button id="btn-toggle-left" class="btn toggle" title="文書管理サイドバー 表示切替 (Alt+1)">☰ 文書</button>
-    <button id="btn-toggle-right" class="btn toggle" title="アウトライン表示切替 (Alt+2)">≡ アウトライン</button>
+    <button id="btn-import" class="btn"><span class="md-icon">file_upload</span>インポート</button>
+    <button id="btn-toggle-left" class="btn icon-btn toggle" title="文書管理サイドバー 表示切替 (Alt+1)" aria-label="文書管理サイドバー 表示切替 (Alt+1)"><span class="md-icon">menu</span></button>
+    <button id="btn-toggle-right" class="btn icon-btn toggle" title="アウトライン表示切替 (Alt+2)" aria-label="アウトライン表示切替 (Alt+2)"><span class="md-icon">toc</span></button>
   </header>
 
   <main id="layout">
     <aside id="sidebar-left">
       <div id="doc-list-header">
         <h2>文書</h2>
-        <button id="btn-delete-doc" class="btn small">削除</button>
+        <button id="btn-delete-doc" class="btn small"><span class="md-icon sm">delete</span>削除</button>
       </div>
       <ul id="doc-list"></ul>
       <section id="commit-panel">
         <div id="commit-header">
           <h2>コミット履歴</h2>
-          <button id="btn-diff-selected" class="btn small" disabled>選択 2 件の差分</button>
+          <button id="btn-diff-selected" class="btn small" disabled><span class="md-icon sm">compare</span>選択 2 件の差分</button>
         </div>
         <ul id="commit-list"></ul>
       </section>
@@ -44,7 +44,7 @@
 
     <section id="center">
       <div id="center-toolbar">
-        <button id="btn-center-mode" class="btn small">表示: 分割</button>
+        <button id="btn-center-mode" class="btn small"><span class="md-icon sm">splitscreen</span><span id="center-mode-label">表示: 分割</span></button>
         <span id="status" class="status"></span>
       </div>
       <div id="center-body">

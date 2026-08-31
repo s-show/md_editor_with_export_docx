@@ -22,7 +22,7 @@ import {
   formatTime,
   renderMarkdown,
 } from "./markdown";
-import { closeModal, confirmDialog, openModal } from "./ui";
+import { attachRipple, closeModal, confirmDialog, openModal } from "./ui";
 import {
   exportAsDocx,
   exportAsMarkdown,
@@ -302,8 +302,8 @@ function renderCommitPanel(): void {
     time.className = "commit-time";
     time.textContent = formatDateTime(c.timestamp);
     const btn = document.createElement("button");
-    btn.className = "btn small";
-    btn.textContent = "diff";
+    btn.className = "btn small icon-btn";
+    btn.innerHTML = '<span class="md-icon sm">compare</span>';
     btn.disabled = idx === 0;
     btn.title = "直前のコミットとの差分を表示";
     btn.addEventListener("click", () => showDiffModal(sorted[idx - 1], c));
@@ -375,7 +375,7 @@ async function onExportDocx(): Promise<void> {
   const btn = document.getElementById(
     "btn-export-docx",
   ) as HTMLButtonElement;
-  const original = btn.textContent;
+  const original = btn.innerHTML;
   btn.disabled = true;
   btn.textContent = "生成中…";
   try {
@@ -490,8 +490,11 @@ function setCenterMode(mode: CenterMode): void {
   centerMode = mode;
   centerBodyEl.classList.toggle("mode-editor", mode === "editor");
   centerBodyEl.classList.toggle("mode-preview", mode === "preview");
-  centerModeBtn.textContent =
-    mode === "split" ? "表示: 分割" : mode === "editor" ? "表示: 入力のみ" : "表示: プレビューのみ";
+  const label = document.getElementById("center-mode-label");
+  if (label) {
+    label.textContent =
+      mode === "split" ? "表示: 分割" : mode === "editor" ? "表示: 入力のみ" : "表示: プレビューのみ";
+  }
   localStorage.setItem("ui:centerMode", mode);
 }
 
@@ -536,6 +539,7 @@ async function init(): Promise<void> {
   centerMode = (localStorage.getItem("ui:centerMode") as CenterMode) || "split";
   setCenterMode(centerMode);
   initSplitter();
+  attachRipple();
 
   editorEl.addEventListener("input", onInput);
   document.addEventListener("visibilitychange", () => {
