@@ -14,16 +14,25 @@
     <button id="btn-new" class="btn btn-tonal"><span class="md-icon">note_add</span>新規文書</button>
     <button id="btn-commit" class="btn btn-filled"><span class="md-icon">commit</span>コミット</button>
     <details id="export-menu" class="menu">
-      <summary class="btn"><span class="md-icon">file_download</span>エクスポート<span class="md-icon caret">arrow_drop_down</span></summary>
+      <summary class="btn btn-outlined"><span class="md-icon">file_download</span>エクスポート<span class="md-icon caret">arrow_drop_down</span></summary>
       <div class="menu-items">
         <button id="btn-export-md"><span class="md-icon">description</span>Markdown (.md) ファイル</button>
         <button id="btn-export-docx"><span class="md-icon">article</span>Word (.docx) ファイル</button>
         <button id="btn-export-json"><span class="md-icon">archive</span>バックアップ (JSON・コミット履歴含む)</button>
       </div>
     </details>
-    <button id="btn-import" class="btn"><span class="md-icon">file_upload</span>インポート</button>
-    <button id="btn-toggle-left" class="btn icon-btn toggle" title="文書管理サイドバー 表示切替 (Alt+1)" aria-label="文書管理サイドバー 表示切替 (Alt+1)"><span class="md-icon">menu</span></button>
-    <button id="btn-toggle-right" class="btn icon-btn toggle" title="アウトライン表示切替 (Alt+2)" aria-label="アウトライン表示切替 (Alt+2)"><span class="md-icon">toc</span></button>
+    <button id="btn-import" class="btn btn-outlined"><span class="md-icon">file_upload</span>インポート</button>
+    <div class="theme-switcher" title="UIテーマの切り替え">
+      <span class="md-icon theme-icon">palette</span>
+      <select id="theme-select" class="theme-select" aria-label="UIテーマの切り替え">
+        <option value="minimal-contrast" selected>案C: High-Contrast (採用)</option>
+        <option value="corporate">案A: Corporate Navy</option>
+        <option value="modern-tech">案B: Modern Tech</option>
+        <option value="default">現行: Pastel MD3</option>
+      </select>
+    </div>
+    <button id="btn-toggle-left" class="btn toggle" title="文書管理サイドバー 表示切替 (Alt+1)" aria-label="文書管理サイドバー 表示切替 (Alt+1)"><span class="md-icon">menu</span>文書管理</button>
+    <button id="btn-toggle-right" class="btn toggle" title="アウトライン表示切替 (Alt+2)" aria-label="アウトライン表示切替 (Alt+2)"><span class="md-icon">toc</span>アウトライン</button>
   </header>
 
   <main id="layout">

@@ -73,6 +73,40 @@ const btnToggleLeft = document.getElementById(
 const btnToggleRight = document.getElementById(
   "btn-toggle-right",
 ) as HTMLButtonElement;
+const themeSelectEl = document.getElementById(
+  "theme-select",
+) as HTMLSelectElement | null;
+
+// ---- theme switcher ----
+const THEME_STORAGE_KEY = "md_editor_theme_v2";
+const DEFAULT_THEME = "minimal-contrast";
+
+function applyTheme(theme: string): void {
+  document.documentElement.dataset.theme = theme;
+  if (themeSelectEl && themeSelectEl.value !== theme) {
+    themeSelectEl.value = theme;
+  }
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function initTheme(): void {
+  let savedTheme: string | null = null;
+  try {
+    savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  } catch {
+    // ignore
+  }
+  const theme = savedTheme || DEFAULT_THEME;
+  applyTheme(theme);
+
+  themeSelectEl?.addEventListener("change", () => {
+    applyTheme(themeSelectEl.value);
+  });
+}
 
 // ---- state ----
 let docs: DocRecord[] = [];
@@ -571,6 +605,7 @@ async function init(): Promise<void> {
   setCenterMode(centerMode);
   initSplitter();
   attachRipple();
+  initTheme();
 
   // ドロップダウン (details) をメニュー外クリックで閉じる
   const exportMenu = document.getElementById(
