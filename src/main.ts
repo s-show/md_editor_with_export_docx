@@ -73,6 +73,40 @@ const btnToggleLeft = document.getElementById(
 const btnToggleRight = document.getElementById(
   "btn-toggle-right",
 ) as HTMLButtonElement;
+const btnGuide = document.getElementById(
+  "btn-guide",
+) as HTMLAnchorElement | null;
+
+// ---- guide modal ----
+function showGuideModal(): void {
+  const container = document.createElement("div");
+  container.className = "guide-iframe-container";
+  const iframe = document.createElement("iframe");
+  iframe.src = "/guide.html";
+  iframe.title = "使い方ガイド";
+  iframe.className = "guide-iframe";
+  container.appendChild(iframe);
+
+  openModal(
+    "使い方ガイド",
+    container,
+    [
+      {
+        label: "別タブで開く",
+        onClick: () => {
+          window.open("/guide.html", "_blank");
+        },
+      },
+      {
+        label: "閉じる",
+        primary: true,
+        onClick: () => closeModal(),
+      },
+    ],
+    true,
+  );
+  document.querySelector(".modal.wide")?.classList.add("guide-dialog");
+}
 
 // ---- state ----
 let docs: DocRecord[] = [];
@@ -593,6 +627,10 @@ async function init(): Promise<void> {
   document.getElementById("btn-commit")!.addEventListener("click", () => void onCommitClick());
   btnToggleLeft.addEventListener("click", toggleLeft);
   btnToggleRight.addEventListener("click", toggleRight);
+  btnGuide?.addEventListener("click", (e) => {
+    e.preventDefault();
+    showGuideModal();
+  });
   for (const m of Object.keys(centerModeBtns) as CenterMode[]) {
     centerModeBtns[m].addEventListener("click", () => setCenterMode(m));
   }

@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown Editor 使い方ガイド</title>
+  <link rel="stylesheet" href="fonts/symbols.css" />
+  <style>
+    :root {
+      --primary: #0369a1;
+      --primary-hover: #0284c7;
+      --primary-bg: #e0f2fe;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #cbd5e1;
+      --border-dark: #64748b;
+      --code-bg: #f1f5f9;
+      --accent-badge: #0284c7;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      --mono: ui-monospace, "SF Mono", Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary: #38bdf8;
+        --primary-hover: #7dd3fc;
+        --primary-bg: #075985;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --bg: #0f172a;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --border-dark: #64748b;
+        --code-bg: #0f172a;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+      padding: 28px 20px 60px;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* ---- Header ---- */
+    .guide-header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .guide-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .guide-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--primary-bg);
+      color: var(--primary);
+      font-size: 26px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .guide-lead {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    /* ---- Table of Contents ---- */
+    .toc {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+
+    .toc-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 8px 16px;
+    }
+
+    .toc-list a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toc-list a:hover {
+      text-decoration: underline;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--primary-bg);
+      margin-bottom: 20px;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 20px 0 8px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    /* ---- Screenshot Cards ---- */
+    .screenshot-card {
+      margin: 18px 0 22px;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .screenshot-caption {
+      padding: 8px 14px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      background: var(--code-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ---- Feature Grid / Steps ---- */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 14px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-body {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* ---- Callouts / Tips ---- */
+    .tip-box {
+      display: flex;
+      gap: 12px;
+      background: var(--primary-bg);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 16px 0;
+      color: var(--text);
+    }
+
+    .tip-icon {
+      color: var(--primary);
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .tip-text {
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    /* ---- Shortcut Table ---- */
+    .table-container {
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 2px 7px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--code-bg);
+      border: 1px solid var(--border-dark);
+      border-radius: 4px;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--primary-bg);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="guide-header">
+      <div class="guide-title-row">
+        <span class="guide-icon"><span class="md-icon">menu_book</span></span>
+        <h1>Markdown Editor 操作ガイド</h1>
+      </div>
+      <p class="guide-lead">
+        このドキュメントでは、本エディタの画面構成、リアルタイムプレビュー、バージョン履歴管理（コミット＆差分比較）、Word / Markdown 出力などの全機能をスクリーンショット付きでわかりやすく解説します。
+      </p>
+
+      <nav class="toc">
+        <div class="toc-title"><span class="md-icon" style="font-size:16px;">list</span> 目次</div>
+        <ul class="toc-list">
+          <li><a href="#section-overview">1. 画面構成と基本レイアウト</a></li>
+          <li><a href="#section-editor">2. 文書作成とリアルタイムプレビュー</a></li>
+          <li><a href="#section-display-mode">3. 表示モード（編集・分割・プレビュー）</a></li>
+          <li><a href="#section-commits">4. コミット履歴と差分比較 (Diff)</a></li>
+          <li><a href="#section-io">5. エクスポートとインポート</a></li>
+          <li><a href="#section-outline">6. 目次（アウトライン）自動生成</a></li>
+          <li><a href="#section-shortcuts">7. キーボードショートカット一覧</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- 1. 画面構成 -->
+    <section id="section-overview" class="section">
+      <div class="section-header">
+        <span class="section-badge">1</span>
+        <h2>画面構成と基本レイアウト</h2>
+      </div>
+      <p>
+        エディタ画面は、ビジネスでの集中した執筆と直感的な操作性を両立する3ペイン構成になっています。
+      </p>
+
+      <div class="screenshot-card">
+        <img src="guide-assets/app_overview.png" alt="アプリ全体画面" />
+        <div class="screenshot-caption">
+          <span class="md-icon" style="font-size:16px;">photo</span>
+          <span>画面全景: 左に「文書・コミット管理」、中央に「Markdownエディタとプレビュー」、右に「目次アウトライン」</span>
+        </div>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-number">A</div>
+          <div class="step-body">
+            <div class="step-title">トップバー（上部）</div>
+            <p class="step-desc">現在の文書名、新規文書作成、コミット記録、ファイル入出力（エクスポート・インポート）、サイドバー開閉ボタンが集約されています。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">B</div>
+          <div class="step-body">
+            <div class="step-title">文書管理サイドバー（左ペイン）</div>
+            <p class="step-desc">保存されている文書の一覧と、選択中文書のコミット履歴（過去のバージョン）を管理します。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">C</div>
+          <div class="step-body">
+            <div class="step-title">エディタ＆プレビュー領域（中央）</div>
+            <p class="step-desc">左側に入力エリア、右側にリアルタイム描画プレビューを配置。スプリッターで比率を自由に変更できます。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">D</div>
+          <div class="step-body">
+            <div class="step-title">アウトライン（右ペイン）</div>
+            <p class="step-desc">Markdownの見出し構造から目次を自動生成し、目的の箇所へ1クリックでジャンプできます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 文書作成とリアルタイムプレビュー -->
+    <section id="section-editor" class="section">
+      <div class="section-header">
+        <span class="section-badge">2</span>
+        <h2>文書作成とリアルタイムプレビュー</h2>
+      </div>
+      <p>
+        編集エリアに入力した Markdown テキストは、タイピングと同時に右側のプレビュー領域に即座に反映されます。
+      </p>
+
+      <div class="screenshot-card">
+        <img src="guide-assets/editor_and_preview.png" alt="エディタとプレビュー" />
+        <div class="screenshot-caption">
+          <span class="md-icon" style="font-size:16px;">photo</span>
+          <span>左に入力（GFM対応）、右側にスタイリングされたHTMLプレビューが即時表示される</span>
+        </div>
+      </div>
+
+      <h3>文書タイトルと自動保存</h3>
+      <p>
+        Markdown の最上位見出し（例: <code># コミット ce39c8b の変更内容</code>）を記述すると、それが自動的に文書タイトルとして認識され、画面上部および左サイドバーのリストに反映されます。
+      </p>
+
+      <div class="tip-box">
+        <span class="md-icon tip-icon">save</span>
+        <div class="tip-text">
+          <strong>安全な自動保存機能:</strong><br />
+          入力内容はブラウザ内データベース（IndexedDB）へリアルタイムに自動保存されます。ブラウザを誤って閉じたりリロードしてもデータが失われる心配はありません。
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 表示モード -->
+    <section id="section-display-mode" class="section">
+      <div class="section-header">
+        <span class="section-badge">3</span>
+        <h2>表示モードの切り替え</h2>
+      </div>
+      <p>
+        エディタ上部のツールバーにあるセグメントボタンから、作業状況に応じて3つの表示モードを切り替えることができます。
+      </p>
+
+      <div class="screenshot-card">
+        <img src="guide-assets/center_toolbar.png" alt="表示モード切替ツールバー" />
+        <div class="screenshot-caption">
+          <span class="md-icon" style="font-size:16px;">photo</span>
+          <span>「編集」「分割」「プレビュー」の3モードを瞬時に切り替え可能</span>
+        </div>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-body">
+            <div class="step-title">編集モード</div>
+            <p class="step-desc">Markdownの入力欄のみを全幅で表示します。長文執筆に集中したい場合に最適です。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-body">
+            <div class="step-title">分割モード（デフォルト）</div>
+            <p class="step-desc">入力エリアとプレビューを左右に並べて表示します。中央の境界線をドラッグして分割比率を調整できます。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-body">
+            <div class="step-title">プレビューモード</div>
+            <p class="step-desc">レンダリング結果のみを全幅で表示します。完成した文書の通読や確認に適しています。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. コミット履歴と差分比較 -->
+    <section id="section-commits" class="section">
+      <div class="section-header">
+        <span class="section-badge">4</span>
+        <h2>コミット履歴と差分比較 (Diff)</h2>
+      </div>
+      <p>
+        Git のようなバージョン管理機能を備えています。文章の節目ごとにスナップショットを「コミット」として記録し、過去の任意のバージョンと比較できます。
+      </p>
+
+      <div class="screenshot-card">
+        <img src="guide-assets/sidebar_left.png" alt="文書管理サイドバーとコミット履歴" />
+        <div class="screenshot-caption">
+          <span class="md-icon" style="font-size:16px;">photo</span>
+          <span>文書一覧と、選択した文書に紐づく過去のコミット履歴</span>
+        </div>
+      </div>
+
+      <h3>コミットの作成手順</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-body">
+            <div class="step-title">「コミット」ボタンを押す</div>
+            <p class="step-desc">トップバーにある青い <span class="pill"><span class="md-icon" style="font-size:14px;">commit</span>コミット</span> ボタンをクリックします。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-body">
+            <div class="step-title">変更内容のメッセージを入力</div>
+            <p class="step-desc">ダイアログが表示されるので、「〇〇章を追加」「タイポ修正」などのメッセージを入力して保存します。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-body">
+            <div class="step-title">履歴の比較（Diff）</div>
+            <p class="step-desc">コミット一覧から2つのチェックボックスを選択すると、<span class="pill"><span class="md-icon" style="font-size:14px;">compare</span>選択 2 件の差分</span> ボタンが有効になります。クリックすると追加（緑）／削除（赤）をハイライトした差分画面が表示されます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. エクスポートとインポート -->
+    <section id="section-io" class="section">
+      <div class="section-header">
+        <span class="section-badge">5</span>
+        <h2>エクスポートとインポート</h2>
+      </div>
+      <p>
+        社内共有、報告書作成、バックアップ用途など、多彩なファイル形式に対応しています。
+      </p>
+
+      <div class="screenshot-card">
+        <img src="guide-assets/header_actions.png" alt="トップバーの入出力アクションボタン" />
+        <div class="screenshot-caption">
+          <span class="md-icon" style="font-size:16px;">photo</span>
+          <span>エクスポートメニュー・インポートボタン・サイドバー開閉操作</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 25%;">機能名</th>
+              <th style="width: 25%;">形式</th>
+              <th>利用用途・メリット</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Markdown (.md)</strong></td>
+              <td>テキスト形式</td>
+              <td>標準的なマークダウンファイルとして書き出します。GitHubや社内Wiki等への再利用に便利です。</td>
+            </tr>
+            <tr>
+              <td><strong>Word (.docx)</strong></td>
+              <td>Wordドキュメント</td>
+              <td>見出し・太字・箇条書き・表組みなどをMicrosoft Word文書へ自動変換して出力します。ビジネス提出用に最適です。</td>
+            </tr>
+            <tr>
+              <td><strong>バックアップ (JSON)</strong></td>
+              <td>JSONファイル</td>
+              <td>文書本文だけでなく、すべての「コミット履歴」を含めた完全なバックアップを保存します。</td>
+            </tr>
+            <tr>
+              <td><strong>インポート</strong></td>
+              <td>.md / .txt / .json</td>
+              <td>PC内のMarkdownファイルや、保存しておいたバックアップJSONを読み込み、エディタに復元します。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. アウトライン -->
+    <section id="section-outline" class="section">
+      <div class="section-header">
+        <span class="section-badge">6</span>
+        <h2>目次（アウトライン）自動生成</h2>
+      </div>
+      <p>
+        Markdown本文内の見出し（<code>#</code>, <code>##</code>, <code>###</code>, <code>####</code>）を解析し、右サイドバーに目次ツリーを自動構築します。
+      </p>
+
+      <div class="screenshot-card">
+        <img src="guide-assets/sidebar_outline.png" alt="アウトライン目次ナビゲーション" />
+        <div class="screenshot-caption">
+          <span class="md-icon" style="font-size:16px;">photo</span>
+          <span>見出しが階層表示され、クリックするとプレビュー内の該当位置へスムーズにジャンプ</span>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <span class="md-icon tip-icon">visibility</span>
+        <div class="tip-text">
+          <strong>作業エリアの最大化:</strong><br />
+          トップバー右上の <span class="pill"><span class="md-icon" style="font-size:14px;">menu</span>文書管理</span> や <span class="pill"><span class="md-icon" style="font-size:14px;">toc</span>アウトライン</span> ボタンを押すことで、左右のサイドバーを折りたたんで執筆領域を広く使えます。
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ショートカット -->
+    <section id="section-shortcuts" class="section">
+      <div class="section-header">
+        <span class="section-badge">7</span>
+        <h2>キーボードショートカット一覧</h2>
+      </div>
+      <p>
+        キーボードのみで効率的に操作するためのショートカットキーが用意されています。
+      </p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30%;">ショートカット</th>
+              <th>機能説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><kbd>Alt</kbd> + <kbd>1</kbd></td>
+              <td>左側「文書管理サイドバー」の表示／非表示を切り替えます</td>
+            </tr>
+            <tr>
+              <td><kbd>Alt</kbd> + <kbd>2</kbd></td>
+              <td>右側「アウトライン（目次）」の表示／非表示を切り替えます</td>
+            </tr>
+            <tr>
+              <td><kbd>Ctrl</kbd> + <kbd>S</kbd> / <kbd>Cmd</kbd> + <kbd>S</kbd></td>
+              <td>文書を即座に手動保存します（自動保存も常時行われます）</td>
+            </tr>
+            <tr>
+              <td><kbd>Esc</kbd></td>
+              <td>開いているダイアログ（差分表示や確認画面）やドロップダウンメニューを閉じます</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
