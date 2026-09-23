@@ -13,10 +13,11 @@
 - **複数文書** — 識別名は先頭 H1 > (インポート時のファイル名) > 初回自動保存のタイムスタンプ
 - **エクスポート** — `.md` / `.docx` / バックアップ `.json` (文書 + コミット履歴)
 - **インポート** — `.md` / `.markdown` / `.txt` (UTF-8 → SHIFT-JIS フォールバック、上限 10MB、ドラッグ&ドロップ可) / バックアップ `.json`
-- **レイアウト** — 左: 文書管理 + コミット履歴 / 中央: 入力・プレビュー (分割位置ドラッグ可、編集/分割/プレビューのセグメント切替) / 右: アウトライン。左右サイドバーは独立して表示切替 (Alt+1 / Alt+2、状態は永続化、900px 未満ではオーバーレイ化)
-- **UI** — Material Design 3 (MD3) ベース: color roles / shape / tonal elevation / type scale を CSS トークン化、`prefers-color-scheme` で自動ダークモード、Material Symbols Outlined (woff2 を `public/fonts/` に自己ホスト)、リップル + state layer、Snackbar (一時的な結果通知)、MD3 ダイアログ (破壊的 action は error 色)。依存ライブラリなしの自前 CSS 実装
+- **レイアウト** — 左: 文書管理 + コミット履歴 / 中央: 入力・プレビュー (分割位置ドラッグ可、編集/分割/プレビューのセグメント切替) / 右: アウトライン / 右上: 使い方ガイド。左右サイドバーは独立して表示切替 (Alt+1 / Alt+2、状態は永続化、900px 未満ではオーバーレイ化)
+- **UI** — ビジネス向け高コントラスト（Minimal High-Contrast）仕様: スレート＆ディープシアン基調のクリーンな配色（本文コントラスト比 21:1、境界線 4.76:1、WCAG 2.1 AA 適合）。選択中文書の左アクセントバー強調、Outlinedボタンスタイル、Material Symbols Outlined 自己ホスト、`prefers-color-scheme` による自動ダークモード対応。依存ライブラリなしの自前 CSS 実装
+- **操作ガイド** — トップバー右上の「使い方」ボタンから、スクリーンショット付きの操作マニュアル（`guide.html`）をダイアログ内または別タブで即座に参照可能
 
-## 開発
+## 開発・デプロイ
 
 ```sh
 NODE_ENV=development npm install
@@ -26,6 +27,14 @@ npm run preview    # 生産ビルドの配信
 ```
 
 注意: この環境では `NODE_ENV=production` が既定で効いており devDependencies がスキップされるため、`npm install` 時は `NODE_ENV=development` を付けます。
+
+### Cloudflare Pages / Workers へのデプロイ
+
+リポジトリ直下に `wrangler.jsonc`（Static Assets 設定）を含んでいるため、Cloudflare Pages / Workers にそのままデプロイ可能です。
+
+- **ビルドコマンド**: `npm run build`
+- **ビルド出力ディレクトリ**: `dist`
+- **デプロイコマンド**: `npx wrangler deploy` (または Pages 連携による自動デプロイ)
 
 ## 設計メモ
 
