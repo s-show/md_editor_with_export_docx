@@ -335,6 +335,155 @@
       background: var(--primary-bg);
       color: var(--primary);
     }
+
+    /* ---- Markdown Cheat Sheet ---- */
+    .cheat-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 16px 0 20px;
+      overflow: hidden;
+      background: var(--card-bg);
+    }
+
+    .cheat-title {
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--code-bg);
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cheat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+      .cheat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cheat-col {
+      padding: 12px 16px;
+    }
+
+    .cheat-col:first-child {
+      border-right: 1px solid var(--border);
+      background: var(--code-bg);
+    }
+
+    .cheat-col-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cheat-source {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: var(--primary);
+    }
+
+    .cheat-preview {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .cheat-preview p {
+      margin-bottom: 6px;
+    }
+
+    .cheat-preview p:last-child {
+      margin-bottom: 0;
+    }
+
+    .cheat-preview h1 {
+      font-size: 18px;
+      margin: 2px 0 6px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+    }
+
+    .cheat-preview h2 {
+      font-size: 16px;
+      margin: 2px 0 6px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+    }
+
+    .cheat-preview h3 {
+      font-size: 14px;
+      margin: 2px 0 4px;
+    }
+
+    .cheat-preview blockquote {
+      border-left: 3px solid var(--border-dark);
+      margin: 0;
+      padding-left: 10px;
+      color: var(--text-muted);
+    }
+
+    .cheat-preview table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .cheat-preview th, .cheat-preview td {
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+    }
+
+    .cheat-preview th {
+      background: var(--code-bg);
+    }
+
+    .cheat-preview code {
+      background: var(--code-bg);
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+    }
+
+    .cheat-preview pre {
+      background: var(--code-bg);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      overflow-x: auto;
+    }
+
+    .cheat-preview ul, .cheat-preview ol {
+      padding-left: 20px;
+      margin-bottom: 6px;
+    }
+
+    .cheat-preview ul.task-list {
+      list-style: none;
+      padding-left: 2px;
+    }
+
+    .cheat-preview ul.task-list li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -358,7 +507,8 @@
           <li><a href="#section-commits">4. コミット履歴と差分比較 (Diff)</a></li>
           <li><a href="#section-io">5. エクスポートとインポート</a></li>
           <li><a href="#section-outline">6. 目次（アウトライン）自動生成</a></li>
-          <li><a href="#section-shortcuts">7. キーボードショートカット一覧</a></li>
+          <li><a href="#section-markdown">7. Markdown 記法チートシート</a></li>
+          <li><a href="#section-shortcuts">8. キーボードショートカット一覧</a></li>
         </ul>
       </nav>
     </header>
@@ -612,10 +762,232 @@
       </div>
     </section>
 
-    <!-- 7. ショートカット -->
-    <section id="section-shortcuts" class="section">
+    <!-- 7. Markdown 記法 -->
+    <section id="section-markdown" class="section">
       <div class="section-header">
         <span class="section-badge">7</span>
+        <h2>Markdown 記法チートシート</h2>
+      </div>
+      <p>
+        本エディタは、業界標準の <strong>GitHub Flavored Markdown (GFM)</strong> および便利な拡張記法（脚注・タスクリスト・自動リンク）をサポートしています。
+      </p>
+
+      <!-- 見出し -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">format_size</span>見出し (Headings)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source"># 見出し 1 (文書タイトル)
+## 見出し 2 (大見出し)
+### 見出し 3 (中見出し)</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <h1>見出し 1 (文書タイトル)</h1>
+              <h2>見出し 2 (大見出し)</h2>
+              <h3>見出し 3 (中見出し)</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-top:-10px; margin-bottom:20px;">
+        <span class="md-icon tip-icon">info</span>
+        <div class="tip-text">
+          最上位の <code># 見出し 1</code> は文書タイトルとして自動認識され、各見出しは右サイドバーの「アウトライン目次」に自動登録されます。
+        </div>
+      </div>
+
+      <!-- 文字装飾 -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">format_bold</span>文字の装飾 (Text Formatting)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source">**太字 (Bold)**
+*斜体 (Italic)*
+~~打ち消し線 (Strikethrough)~~
+`インラインコード (Code)`</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <p><strong>太字 (Bold)</strong></p>
+              <p><em>斜体 (Italic)</em></p>
+              <p><s>打ち消し線 (Strikethrough)</s></p>
+              <p><code>インラインコード (Code)</code></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- リストとタスクリスト -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">format_list_bulleted</span>リストとタスクリスト (Lists & Tasks)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source">- 箇条書き項目 1
+  - ネストした項目
+- 箇条書き項目 2
+
+1. 番号付き項目 1
+2. 番号付き項目 2
+
+- [ ] 未完了タスク
+- [x] 完了したタスク</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <ul>
+                <li>箇条書き項目 1
+                  <ul><li>ネストした項目</li></ul>
+                </li>
+                <li>箇条書き項目 2</li>
+              </ul>
+              <ol>
+                <li>番号付き項目 1</li>
+                <li>番号付き項目 2</li>
+              </ol>
+              <ul class="task-list">
+                <li><input type="checkbox" disabled /> 未完了タスク</li>
+                <li><input type="checkbox" checked disabled /> 完了したタスク</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 引用 -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">format_quote</span>引用 (Blockquotes)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source">> これは引用テキストです。
+> 複数行にわたって引用できます。
+>> 入れ子の引用文</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <blockquote>
+                <p>これは引用テキストです。<br />複数行にわたって引用できます。</p>
+                <blockquote><p>入れ子の引用文</p></blockquote>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- コードブロック -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">code</span>コードブロック (Code Blocks)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source">```ts
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <pre><code>function greet(name: string): string {
+  return `Hello, ${name}!`;
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- テーブル -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">table_chart</span>表組み (Tables)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source">| 項目 | 状態 | 担当者 |
+| :--- | :---: | ---: |
+| 要件定義 | 完了 | 田中 |
+| 設計 | 進行中 | 佐藤 |</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="text-align:left;">項目</th>
+                    <th style="text-align:center;">状態</th>
+                    <th style="text-align:right;">担当者</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="text-align:left;">要件定義</td>
+                    <td style="text-align:center;">完了</td>
+                    <td style="text-align:right;">田中</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align:left;">設計</td>
+                    <td style="text-align:center;">進行中</td>
+                    <td style="text-align:right;">佐藤</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- リンクと脚注 -->
+      <div class="cheat-card">
+        <div class="cheat-title"><span class="md-icon" style="font-size:16px;">link</span>リンク・水平線・脚注 (Links, Rules & Footnotes)</div>
+        <div class="cheat-grid">
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">edit</span>Markdown入力例</div>
+            <div class="cheat-source">[公式サイト](https://example.com)
+https://example.com (自動リンク)
+
+---
+
+重要な注記[^1]があります。
+
+[^1]: 脚注の詳細説明テキスト</div>
+          </div>
+          <div class="cheat-col">
+            <div class="cheat-col-header"><span class="md-icon" style="font-size:14px;">preview</span>プレビュー表示</div>
+            <div class="cheat-preview">
+              <p><a href="#" style="color:var(--primary);">公式サイト</a></p>
+              <p><a href="#" style="color:var(--primary);">https://example.com</a></p>
+              <hr style="margin:8px 0; border:none; border-top:1px solid var(--border);" />
+              <p>重要な注記<sup>[1]</sup>があります。</p>
+              <div style="font-size:12px; color:var(--text-muted); border-top:1px dashed var(--border); padding-top:4px;">
+                [1] 脚注の詳細説明テキスト
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <span class="md-icon tip-icon">security</span>
+        <div class="tip-text">
+          <strong>セキュリティ設計 (XSS対策):</strong><br />
+          本エディタでは安全性を最優先するため、生のHTMLタグ（<code>&lt;script&gt;</code> や <code>&lt;div&gt;</code> など）は無効化（自動エスケープ）されます。社外から持ち込んだMarkdownファイルも安全にプレビューできます。
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. ショートカット -->
+    <section id="section-shortcuts" class="section">
+      <div class="section-header">
+        <span class="section-badge">8</span>
         <h2>キーボードショートカット一覧</h2>
       </div>
       <p>
