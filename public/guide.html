@@ -79,16 +79,23 @@
       margin-bottom: 12px;
     }
 
+    /* アプリ実体アイコン (public/apple-touch-icon.png)。
+       PNG は 180x180 が全面不透明で角の透過がなく、その中に角丸タイルが描かれている
+       ため、タイル自身の半径 15/180 = 8.33% に合わせた 4px でクリップして白四隅を落とす */
     .guide-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      flex: none;
       width: 44px;
       height: 44px;
-      border-radius: 10px;
-      background: var(--primary-bg);
-      color: var(--primary);
-      font-size: 26px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    /* ダークモードではカード背景 (#1e293b) とタイル地 (#142436) の差がほぼ無く
+       輪郭が溶けるため、1px のリングで分離する */
+    @media (prefers-color-scheme: dark) {
+      .guide-icon {
+        box-shadow: 0 0 0 1px var(--border-dark);
+      }
     }
 
     h1 {
@@ -496,7 +503,7 @@
     <!-- Header -->
     <header class="guide-header">
       <div class="guide-title-row">
-        <span class="guide-icon"><span class="md-icon">menu_book</span></span>
+        <img class="guide-icon" src="./apple-touch-icon.png" alt="" width="44" height="44" />
         <h1>Markdown Editor 操作ガイド</h1>
       </div>
       <p class="guide-lead">

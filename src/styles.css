@@ -155,10 +155,39 @@ body {
   flex-wrap: wrap;
 }
 
+/* ブランド表示 (アイコン + アプリ名)。トップバーは flex-wrap があるので
+   アイコンと名称が行をまたいで分離しないよう 1 つのインラインフレックスに固める */
+#app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  flex: none;
+}
+
+#app-icon {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  /* PNG は 180x180 の全面不透明 (角の透過なし) で、その中に角丸タイルが描かれている。
+     タイル自身の半径 15/180 = 8.33% に合わせた 2px でクリップし、
+     ダークモードのトップバー上で白い四隅が見えるのを防ぐ */
+  border-radius: 2px;
+}
+
+/* ダークモードではトップバー (#27272a) とタイル地 (#142436) が近く輪郭が溶けるため、
+   ガイド側と同じく 1px のリングで分離する */
+@media (prefers-color-scheme: dark) {
+  #app-icon {
+    box-shadow: 0 0 0 1px var(--md-outline-variant);
+  }
+}
+
 #app-title {
   font-size: 16px;
   font-weight: 500;
-  padding-left: 12px;
 }
 
 #doc-title {
