@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "favicon:ico": "node scripts/gen-favicon-ico.mjs"
   },
   "dependencies": {
     "diff": "^9.0.0",

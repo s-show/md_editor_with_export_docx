@@ -45,6 +45,9 @@ npm run preview    # 生産ビルドの配信
 - **docx 出力**: `mdast2docx` (unified/remark 系) を使用し、テーブル (`@m2d/table`) と番号付きリスト (`@m2d/list`) をプラグインで有効化。重いため動的 import して初回ロードに含めない。**画像は docx に含まれない** (ローカル画像パスで変換が失敗しないための意図的な設計)。
 - **バンドル**: 初期チャンクは markdown-it + idb + diff のみ (gzip ~60KB)。docx 系は初回エクスポート時のみ読込。
 
+- **Favicon / マニフェスト**: 画像は `public/` 直置き (Vite がそのまま `dist/` へコピー)。`index.html` と `public/guide.html` の両方から**相対パス**で参照している (`base: "./"` のためサブディレクトリ配信でも落ちない)。`manifest.json` の icon `src` も先頭 `/` なしの相対で、マニフェスト自身の URL から解決する。`theme_color` は light の primary `#0369a1`。
+  `favicon.ico` は generator 系の出力が「拡張子だけ .ico の PNG 32x32」になりがちなので、`npm run favicon:ico` で 16/24/32/48/64 を埋め込んだ本物の ICO コンテナに組み替える (PNG-in-ICO。16 と 32 は既存 `favicon-{size}x{size}.png` のバイトをそのまま使い、リンク PNG と ICO のピクセルを一致させる)。
+
 ## 既知の制約
 
 - データはブラウザ / プロファイル内に留まる (端末移行はバックアップ JSON で)
