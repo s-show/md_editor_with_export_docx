@@ -1,7 +1,7 @@
 import type { CommitRecord, DocRecord } from "./db";
 import { downloadBlob } from "./ui";
 import { formatDateTime, sanitizeFileName } from "./markdown";
-import { AlignmentType, LevelFormat, ShadingType } from "docx";
+import { AlignmentType, LevelFormat, LevelSuffix, ShadingType } from "docx";
 import type { IPlugin } from "@m2d/core";
 
 // ---- Word 出力の書式（プレビューと揃える） ----
@@ -49,10 +49,10 @@ const headingNumbering: IPlugin = {
         {
           reference: HEADING_NUM_REF,
           levels: [
-            { level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.START },
-            { level: 1, format: LevelFormat.DECIMAL, text: "(%1)", alignment: AlignmentType.START },
-            { level: 2, format: LevelFormat.DECIMAL_ENCLOSED_CIRCLE, text: "%1", alignment: AlignmentType.START },
-            { level: 3, format: LevelFormat.IROHA_FULL_WIDTH, text: "%1", alignment: AlignmentType.START },
+            { level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.START, suffix: LevelSuffix.SPACE },
+            { level: 1, format: LevelFormat.DECIMAL, text: "(%1)", alignment: AlignmentType.START, suffix: LevelSuffix.SPACE },
+            { level: 2, format: LevelFormat.DECIMAL_ENCLOSED_CIRCLE, text: "%1", alignment: AlignmentType.START, suffix: LevelSuffix.SPACE },
+            { level: 3, format: LevelFormat.IROHA_FULL_WIDTH, text: "%1", alignment: AlignmentType.START, suffix: LevelSuffix.SPACE },
           ],
         },
       ],
@@ -67,10 +67,11 @@ const docxProps = {
     default: {
       document: {
         paragraph: {
-          spacing: { before: 175, line: 240 }, // 段落前 8.75pt / 行間 1.0
+          spacing: { before: 0, line: 240 }, // 段落前 0 / 行間 1.0
           alignment: AlignmentType.JUSTIFIED, // 両端揃え
+          keepLines: false, // 改ページ時1行残して段落を区切らない: OFF
         },
-        run: { size: 22 }, // 標準 11pt
+        run: { size: 22, font: { ascii: "MS Gothic", eastAsia: "MS Gothic" } }, // 標準 11pt / MSゴシック
       },
       heading1: {
         paragraph: { spacing: { before: 350 }, alignment: AlignmentType.CENTER },
