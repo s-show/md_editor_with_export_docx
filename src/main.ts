@@ -53,6 +53,7 @@ const outlineEl = document.getElementById("outline") as HTMLElement;
 const statusEl = document.getElementById("status") as HTMLSpanElement;
 const docTitleEl = document.getElementById("doc-title") as HTMLSpanElement;
 const centerBodyEl = document.getElementById("center-body") as HTMLDivElement;
+const layoutEl = document.getElementById("layout") as HTMLElement;
 const splitterEl = document.getElementById("splitter") as HTMLDivElement;
 const diffSelectedBtn = document.getElementById(
   "btn-diff-selected",
@@ -578,6 +579,57 @@ function toggleRight(): void {
   btnToggleRight.classList.toggle("active", !hidden);
 }
 
+// ---- サイドバー幅のドラッグリサイズ ----
+const PANEL_MIN_W = 160;
+
+function clampPanelWidth(px: number): number {
+  const max = Math.max(PANEL_MIN_W, Math.floor(layoutEl.clientWidth * 0.4));
+  return Math.min(max, Math.max(PANEL_MIN_W, px));
+}
+
+function initPanelResizer(side: "left" | "right"): void {
+  const handle = document.getElementById(
+    side === "left" ? "resize-left" : "resize-right",
+  ) as HTMLElement;
+  const prop = side === "left" ? "--left-w" : "--right-w";
+  const lsKey = side === "left" ? "ui:leftW" : "ui:rightW";
+  const saved = Number(localStorage.getItem(lsKey));
+  if (Number.isFinite(saved)) {
+    layoutEl.style.setProperty(prop, `${clampPanelWidth(saved)}px`);
+  }
+
+  const toggleBtn = side === "left" ? btnToggleLeft : btnToggleRight;
+  const hiddenClass = side === "left" ? "hide-left" : "hide-right";
+
+  handle.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    // 非表示のペインはハンドルをドラッグした時点で再表示する
+    if (document.body.classList.contains(hiddenClass)) {
+      document.body.classList.remove(hiddenClass);
+      toggleBtn.classList.add("active");
+      localStorage.setItem(side === "left" ? "ui:left" : "ui:right", "1");
+    }
+    handle.setPointerCapture(e.pointerId);
+    const move = (ev: PointerEvent) => {
+      const rect = layoutEl.getBoundingClientRect();
+      const w = clampPanelWidth(
+        side === "left" ? ev.clientX - rect.left - 3 : rect.right - ev.clientX - 3,
+      );
+      layoutEl.style.setProperty(prop, `${w}px`);
+    };
+    const up = () => {
+      handle.removeEventListener("pointermove", move);
+      handle.removeEventListener("pointerup", up);
+      handle.removeEventListener("pointercancel", up);
+      const v = layoutEl.style.getPropertyValue(prop);
+      if (v) localStorage.setItem(lsKey, v);
+    };
+    handle.addEventListener("pointermove", move);
+    handle.addEventListener("pointerup", up);
+    handle.addEventListener("pointercancel", up);
+  });
+}
+
 function initSplitter(): void {
   const saved = localStorage.getItem("ui:split");
   if (saved) centerBodyEl.style.setProperty("--split", saved);
@@ -607,6 +659,8 @@ async function init(): Promise<void> {
   centerMode = (localStorage.getItem("ui:centerMode") as CenterMode) || "split";
   setCenterMode(centerMode);
   initSplitter();
+  initPanelResizer("left");
+  initPanelResizer("right");
   attachRipple();
 
   // ドロップダウン (details) をメニュー外クリックで閉じる
