@@ -20,6 +20,7 @@ import {
   extractOutline,
   formatDateTime,
   formatTime,
+  headingNumber,
   renderMarkdown,
 } from "./markdown";
 import {
@@ -143,11 +144,13 @@ function renderOutlineNow(): void {
     outlineEl.appendChild(p);
     return;
   }
+  const counters: number[] = [0, 0, 0, 0]; // h2〜h5
   for (const it of items) {
     const btn = document.createElement("button");
     btn.className = "outline-item";
     btn.style.paddingLeft = `${8 + (it.level - 1) * 14}px`;
-    btn.textContent = it.text;
+    const num = headingNumber(it.level, counters);
+    btn.textContent = num + it.text;
     btn.addEventListener("click", () => jumpToLine(it.line));
     outlineEl.appendChild(btn);
   }

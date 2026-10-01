@@ -17,8 +17,44 @@ const md = new MarkdownIt({
   enabled: [],
 });
 
+// 見出し自動番号付け (Word エクスポートと同じ書式)
+// H2 → 1.  H3 → (1)  H4 → ①  H5 → イ
+const CIRCLED = "\u2460\u2461\u2462\u2463\u2464\u2465\u2466\u2467\u2468\u2469\u246a\u246b\u246c\u246d\u246e\u246f\u2470\u2471\u2472\u2473";
+const IROHA = "イロハニホヘトチリヌルヲワカヨタレソツネナラムイヅヨエオ"
+
+export function headingNumber(level: number, counters: number[]): string {
+  if (level < 2 || level > 5) return "";
+  const idx = level - 2;
+
+  counters[idx] += 1;
+  const n = counters[idx];
+
+  // 上位見出しが現れたら下位をリセット
+  for (let i = idx + 1; i < counters.length; i++) {
+    counters[i] = 0;
+  }
+
+  switch (level) {
+    case 2: return `${n}. `;
+    case 3: return `(${n}) `;
+    case 4: return (n >= 1 && n <= 20 ? CIRCLED[n - 1] : String(n)) + " ";
+    case 5: return (n >= 1 && n <= 46 ? IROHA[n - 1] : String(n)) + " ";
+    default: return "";
+  }
+}
+
 export function renderMarkdown(body: string): string {
-  return md.render(body);
+  let html = md.render(body);
+  const counters: number[] = [0, 0, 0, 0]; // h2〜h5
+
+  // 各見出しに番号 span を注入
+  html = html.replace(/<h([2-5])(\s[^>]*)?>/g, (match, levelStr, _attrs) => {
+    const level = Number(levelStr);
+    const num = headingNumber(level, counters);
+    return match + `<span class="heading-num">${num}</span>`;
+  });
+
+  return html;
 }
 
 export interface OutlineItem {
