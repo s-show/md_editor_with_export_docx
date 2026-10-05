@@ -633,6 +633,12 @@ body.hide-right #sidebar-right {
   font-size: 11.5px;
 }
 
+.commit-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
 /* ---- outline (MD3 navigation list) ---- */
 #sidebar-right h2 {
   padding: 16px 16px 8px;

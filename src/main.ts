@@ -370,8 +370,17 @@ function renderCommitPanel(): void {
     btn.disabled = idx === 0;
     btn.title = "直前のコミットとの差分を表示";
     btn.addEventListener("click", () => showDiffModal(sorted[idx - 1], c));
+    const btnRestore = document.createElement("button");
+    btnRestore.className = "btn small icon-btn";
+    btnRestore.innerHTML = '<span class="md-icon sm">restore</span>';
+    btnRestore.title =
+      "このコミットの内容に現在の本文を復元します (復元前に現在の状態を自動でバックアップコミットします)";
+    btnRestore.addEventListener("click", () => void onRestoreCommit(c));
+    const actions = document.createElement("div");
+    actions.className = "commit-actions";
+    actions.append(btn, btnRestore);
     cb.addEventListener("change", updateDiffSelectedBtn);
-    li.append(cb, main, btn);
+    li.append(cb, main, actions);
     commitListEl.appendChild(li);
   });
   updateDiffSelectedBtn();
@@ -415,6 +424,64 @@ async function onCommitClick(): Promise<void> {
     console.error("commit failed", e);
     alert(`コミットに失敗しました: ${errMsg(e)}`);
   }
+}
+
+// ---- 復元 ----
+async function onRestoreCommit(commit: CommitRecord): Promise<void> {
+  if (!currentId) {
+    setStatus("復元対象の文書が選択されていません");
+    return;
+  }
+  await flushSave();
+  // 最新コミットと現在の内容が異なる（＝未コミットの変更がある）場合のみ自動バックアップする
+  const latest =
+    commits.length > 0
+      ? commits.reduce((a, b) => (a.timestamp >= b.timestamp ? a : b))
+      : null;
+  const hasUncommittedChanges =
+    !latest || latest.body !== editorEl.value;
+  const ok = await confirmDialog(
+    `コミット「${commit.message || "(メッセージなし)"}」(${formatDateTime(commit.timestamp)}) の内容に現在の本文を復元します。現在の本文が上書きされます。${
+      hasUncommittedChanges
+        ? "\n復元前に、現在の状態を自動でバックアップコミットします。"
+        : ""
+    }\nよろしいですか？`,
+    "復元",
+    true,
+  );
+  if (!ok) return;
+  if (hasUncommittedChanges) {
+    const backup: CommitRecord = {
+      id: newId(),
+      docId: currentId,
+      message: "復元前の自動バックアップ",
+      timestamp: Date.now(),
+      body: editorEl.value,
+    };
+    try {
+      await putCommit(backup);
+    } catch (e) {
+      console.error("auto backup commit failed", e);
+      alert(`復元前のバックアップコミットに失敗したため、復元を中止します: ${errMsg(e)}`);
+      return;
+    }
+  }
+  if (previewTimer !== null) {
+    clearTimeout(previewTimer);
+    previewTimer = null;
+  }
+  editorEl.value = commit.body;
+  renderPreviewNow();
+  renderOutlineNow();
+  try {
+    await flushSave();
+    await loadCommitPanel();
+  } catch (e) {
+    console.error("restore save failed", e);
+    setStatus(`復元後の保存に失敗しました: ${errMsg(e)}`);
+    return;
+  }
+  showSnackbar(`コミットに復元しました ${formatTime(commit.timestamp)}`);
 }
 
 // ---- export ----
