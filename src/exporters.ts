@@ -127,7 +127,8 @@ export function exportAsMarkdown(doc: DocRecord, name: string): void {
 }
 
 // docx 変換用ライブラリは重いため、使用時にのみ動的 import する
-export async function exportAsDocx(doc: DocRecord, name: string): Promise<void> {
+// 戻り値: 出力に含まれなかった画像ノードの枚数 (UI での通知用)
+export async function exportAsDocx(doc: DocRecord, name: string): Promise<number> {
   const [{ toDocx }, { unified }, { default: remarkParse }, { default: remarkGfm }, { tablePlugin }, { listPlugin }] =
     await Promise.all([
       import("mdast2docx"),
@@ -138,13 +139,26 @@ export async function exportAsDocx(doc: DocRecord, name: string): Promise<void> 
       import("@m2d/list"),
     ]);
   const ast = unified().use(remarkParse).use(remarkGfm).parse(doc.body);
-  // 画像は docx に含めない (ローカル画像で変換が失敗しないため)
+  // mdast2docx コアは image ノード非対応 (@m2d/image は意図的に未導入)。
+  // 画像ノードはコアの既定挙止 (console.warn + スキップ) で出力から除外されるため、
+  // ここでは枚数を数えて呼び出し元で通知させる。
+  const skippedImages = countImageNodes(ast);
   // useTitle: false → Markdown の #〜##### がそのまま見出し1〜見出し5 になる
   const blob = (await toDocx(ast, docxProps, {
     useTitle: false,
     plugins: [tablePlugin(), listPlugin(), headingNumbering],
   })) as Blob;
   downloadBlob(blob, `${sanitizeFileName(name)}.docx`);
+  return skippedImages;
+}
+
+/** mdast ツリー内の image ノードを再帰集計する */
+function countImageNodes(node: { type: string; children?: unknown[] }): number {
+  let count = node.type === "image" ? 1 : 0;
+  for (const child of node.children ?? []) {
+    count += countImageNodes(child as { type: string; children?: unknown[] });
+  }
+  return count;
 }
 
 export const BACKUP_VERSION = 1;

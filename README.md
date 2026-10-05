@@ -42,7 +42,7 @@ npm run preview    # 生産ビルドの配信
 
 - **セキュリティ**: プレビューに生 HTML を流さないため `markdown-it` を `html: false` 固定。インポートするテキストやコミット本文から XSS が成立しないことをこれだけで保証する。`html: true` への切替オプションは作らないこと。
 - **保存**: 文書 (`documents`) とコミット (`commits`) を IndexedDB の 2 ストアに格納。コミットは全文スナップショット方式。
-- **docx 出力**: `mdast2docx` (unified/remark 系) を使用し、テーブル (`@m2d/table`) と番号付きリスト (`@m2d/list`) をプラグインで有効化。重いため動的 import して初回ロードに含めない。**画像は docx に含まれない** (ローカル画像パスで変換が失敗しないための意図的な設計)。
+- **docx 出力**: `mdast2docx` (unified/remark 系) を使用し、テーブル (`@m2d/table`) と番号付きリスト (`@m2d/list`) をプラグインで有効化。重いため動的 import して初回ロードに含めない。**画像は docx に含まれない** (mdast2docx コアは image ノード非対応で `@m2d/image` は意図的に未導入。コアの既定挙止として warn + スキップされる)。エクスポート時に画像ノードを数え、1 枚でも含まれる場合は Snackbar で「画像 N 枚は出力に含まれません」と通知する。
 - **バンドル**: 初期チャンクは markdown-it + idb + diff のみ (gzip ~60KB)。docx 系は初回エクスポート時のみ読込。
 
 - **Favicon / マニフェスト**: 画像は `public/` 直置き (Vite がそのまま `dist/` へコピー)。`index.html` と `public/guide.html` の両方から**相対パス**で参照している (`base: "./"` のためサブディレクトリ配信でも落ちない)。`manifest.json` の icon `src` も先頭 `/` なしの相対で、マニフェスト自身の URL から解決する。`theme_color` は light の primary `#0369a1`。

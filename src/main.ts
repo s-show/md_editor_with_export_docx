@@ -447,8 +447,12 @@ async function onExportDocx(): Promise<void> {
     await flushSave();
     const fresh = currentDoc();
     if (!fresh) return;
-    await exportAsDocx(fresh, docDisplayName(fresh));
-    showSnackbar(".docx ファイルをエクスポートしました");
+    const skippedImages = await exportAsDocx(fresh, docDisplayName(fresh));
+    showSnackbar(
+      skippedImages > 0
+        ? `.docx ファイルをエクスポートしました (画像 ${skippedImages} 枚は出力に含まれません)`
+        : ".docx ファイルをエクスポートしました",
+    );
   } catch (e) {
     console.error("docx export failed", e);
     alert(`.docx 生成に失敗しました: ${e instanceof Error ? e.message : String(e)}\n詳細はコンソール (F12) を確認してください`);
