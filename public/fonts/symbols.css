@@ -1,9 +1,17 @@
-/* Material Symbols Outlined (Google Fonts, OFL 1.1) — 自己ホスト版 */
+/* Material Symbols Outlined (Google Fonts, OFL 1.1) — 自己ホスト版
+ *
+ * 添付 woff2 は使用リガチャ 29 個のみにサブセット化した版 (18,344 B / 元 3,963,852 B)。
+ * 再生成: bash scripts/subset-font.sh
+ *
+ * リガチャは OpenType feature の rlig (必須) / rclt で提供されているため、
+ * 下の "liga" 指定は実質効かない (効いていなくてもアイコンは描画される)。 */
 @font-face {
   font-family: "Material Symbols Outlined";
   font-style: normal;
   font-weight: 100 700;
   src: url("MaterialSymbolsOutlined.woff2") format("woff2");
+  /* ロード中、"save" などのリガチャ文字がそのまま見えるのを防ぐ */
+  font-display: block;
 }
 
 .md-icon.sm {
