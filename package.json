@@ -26,6 +26,6 @@
     "@types/markdown-it-footnote": "^3.0.4",
     "sharp": "^0.34.5",
     "typescript": "^7.0.2",
-    "vite": "^8.2.2"
+    "vite": "^8.2.4"
   }
 }
